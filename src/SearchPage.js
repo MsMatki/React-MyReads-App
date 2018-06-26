@@ -1,31 +1,77 @@
 import React, { Component } from 'react'
 import BookShelves from './BookShelves'
 import PropTypes from 'prop-types'
-import escapeRegExp from 'escape-string-regexp'
 import sortBy from 'sort-by'
 import { Link } from 'react-router-dom'
 import DebounceImput from 'react-debounce-input'
+import * as BooksAPI from './BooksAPI'
 
 class SearchPage extends Component{
 
   static propTypes = {
-    updateQuery: PropTypes.func.isRequired,
-    query: PropTypes.string.isRequired,
-    searchBooks: PropTypes.array.isRequired
+    books: PropTypes.array.isRequired
 }
-  componentDidMount(){
-    this.props.resetQuery()
-    this.props.emptyBooks()
+
+state = {
+  query: '',
+  searchBooks: [],
+}
+
+updateQuery = (query) => {
+  this.setState({
+    query: query
+  })
+  //if query is empty, don't show any books 
+  if(query === ''){
+    this.setState({
+      searchBooks: []
+    })
+  }else{
+    BooksAPI.search(query).then((searchedBooks) => {
+      //if search doesn't match don't show any books
+      if(searchedBooks.error){
+        this.setState({
+          searchBooks: []
+        })
+      }else{
+        //Sets searched book shelf equal to book shelf
+        const resultBooks = searchedBooks.map(searchBook => {
+          searchBook.shelf = 'none'
+          this.props.books.forEach((book) => {
+            if(book.id === searchBook.id){
+              searchBook.shelf = book.shelf
+            }
+          })
+          return searchBook
+        })
+        this.setState({
+          searchBooks: resultBooks
+      })
+      }
+      
+    })
   }
+}
+ //empy all books
+  emptyBooks = () => 
+  this.setState({ 
+    searchBooks: []
+  })
+//resets the input area query
+  resetQuery = () => {
+  this.setState({
+    query: ''
+  })
+  }
+
+  componentDidMount(){
+    this.resetQuery()
+    this.emptyBooks()
+  }
+  
     render(){
 
-      let showBooks = this.props.searchBooks;
-      if(this.props.query){
-        const match = new RegExp(escapeRegExp(this.props.query), 'i')
-        showBooks = this.props.searchBooks.filter((book) => match.test(book.title))
-      }else{
-        showBooks = this.props.searchBooks
-      }
+      let showBooks = this.state.searchBooks;
       showBooks.sort(sortBy('name'))
         return(
 
@@ -39,8 +85,8 @@ class SearchPage extends Component{
                   debounceTimeout={250}
                   type="text" 
                   placeholder="Search by title or author" 
-                  value={this.props.query}
-                  onChange={(event) => this.props.updateQuery(event.target.value)}
+                  value={this.state.query}
+                  onChange={(event) => this.updateQuery(event.target.value)}
                 />
               </div>
             </div>
