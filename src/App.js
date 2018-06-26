@@ -9,9 +9,7 @@ import SearchPage from './SearchPage'
 class BooksApp extends React.Component {
   
   state = {
-    query: '',
     books: [],
-    searchBooks: [],
   }
 
   componentDidMount() {
@@ -20,67 +18,16 @@ class BooksApp extends React.Component {
     })
   }
 
-  updateQuery = (query) => {
-    this.setState({
-      query: query
-    })
-    //if query is empty, don't show any books 
-    if(query === ''){
-      this.setState({
-        searchBooks: []
-      })
-    }else{
-      BooksAPI.search(query).then((searchedBooks) => {
-        //if search doesn't match don't show any books
-        if(searchedBooks.error){
-          this.setState({
-            searchBooks: []
-          })
-        }else{
-          //Sets searched book shelf equal to book shelf
-          const resultBooks = searchedBooks.map(searchBook => {
-            this.state.books.forEach((book) => {
-              if(book.id === searchBook.id){
-                searchBook.shelf = book.shelf
-              }
-            })
-            return searchBook
-          })
-          this.setState({
-            searchBooks: resultBooks
-        })
-        }
-        
-      })
-    }
-  }
-
   changeShelf = ( book, shelf) => {
     BooksAPI.update(book, shelf).then(() => {
       book.shelf = shelf
       this.setState({ shelf })
       if(this.state.query !== ''){
-        //if book is allready on your shelf
+        //adds book to you shelf
         this.setState((state) => ({
-          books: state.books.filter((b) => b.id !== book.id)
-        }))
-        //adds new book to your shelf
-        this.setState(state => ({
-          books: state.books.concat([ book ]),
+          books: state.books.filter((b) => b.id !== book.id).concat([ book ])
         }))
       }
-      })
-    }
-  
-    //empy all books
-    emptyBooks = () => 
-      this.setState({ 
-        searchBooks: []
-    })
-    //resets the input area query
-    resetQuery = () => {
-      this.setState({
-        query: ''
       })
     }
   
@@ -120,12 +67,8 @@ class BooksApp extends React.Component {
         )}/>
         <Route path="/search" render={({ history }) => (
           <SearchPage
-            resetQuery={this.resetQuery}
-            emptyBooks={this.emptyBooks}
             bookShelf="Search Results"
-            searchBooks={this.state.searchBooks}
-            query={this.state.query}
-            updateQuery={this.updateQuery}
+            books={this.state.books}
             changeShelf={(book, shelf) => {this.changeShelf(book, shelf)
             history.push('/')
           }}
