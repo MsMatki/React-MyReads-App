@@ -48,20 +48,19 @@ updateQuery = (query) => {
           searchBooks: resultBooks
       })
       }
-      
     })
   }
 }
  //empy all books
   emptyBooks = () => 
-  this.setState({ 
-    searchBooks: []
-  })
+    this.setState({ 
+      searchBooks: []
+    })
 //resets the input area query
   resetQuery = () => {
-  this.setState({
-    query: ''
-  })
+    this.setState({
+      query: ''
+    })
   }
 
   componentDidMount(){

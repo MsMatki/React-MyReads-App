@@ -20,6 +20,7 @@ export const getAll = () =>
   fetch(`${api}/books`, { headers })
     .then(res => res.json())
     .then(data => data.books)
+
     
 
 export const update = (book, shelf) =>
@@ -39,7 +40,8 @@ export const search = (query) =>
       ...headers,
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ query })
+    body: JSON.stringify({ query }),
   }).then(res => res.json())
     .then(data => data.books)
+    
 
