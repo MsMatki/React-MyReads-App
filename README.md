@@ -7,7 +7,7 @@ The main page shows a control that allows you to move books between shelves. The
 
 ## Preview
 
-You can check the live website [Here](https://msmatki.github.io/myreads/)
+You can check the live website [Here](https://msmatki.github.io/myreads-preview/)
 
 ## Screenshot
 
