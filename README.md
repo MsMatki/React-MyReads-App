@@ -5,6 +5,10 @@ MyReads is a bookshelf app that allows the user to select and categorize books t
 ## How To Use
 The main page shows a control that allows you to move books between shelves. The search page allows users to search for new books to add to their shelves. To access the search page select the plus icon located at the bottom right of the page. Type in the search field for possible books to be found. Once loaded you may choose which shelf to send a book to by clicking on the green circle with a down arrow of any book.
 
+## Preview
+
+You can check the live website [Here](https://msmatki.github.io/myreads/)
+
 ## Screenshot
 
 ![alt text](img/MyReads1.png)
